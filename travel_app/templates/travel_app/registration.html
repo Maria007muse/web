@@ -1,0 +1,64 @@
+{% extends 'travel_app/baseauto.html' %}
+
+{% block content %}
+
+<div class="container-fluid vh-100" style="margin-top:300px">
+    <div class="" style="margin-top:200px">
+        <div class="rounded d-flex justify-content-center">
+            <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-light">
+                <div class="text-center">
+                    <h3 class="text-primary">Регистрация</h3>
+                </div>
+                <div class="p-4">
+                    <form action="{% url 'register' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary"><i
+                                    class="bi bi-person-plus-fill text-white"></i></span>
+                            <input type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" name="username" placeholder="Username"
+                            value="{{ form.username.value|default_if_none:'' }}">
+                            <div class="invalid-feedback">
+                                {{ form.username.errors.0 }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary"><i
+                                    class="bi bi-envelope text-white"></i></span>
+                            <input type="email" name="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" placeholder="Email"
+                                   value="{{ form.email.value|default_if_none:'' }}">
+                            <div class="invalid-feedback">
+                                {{ form.email.errors.0 }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary"><i
+                                    class="bi bi-key-fill text-white"></i></span>
+                            <input type="password" name="password" class="form-control {% if form.password.errors %}is-invalid{% endif %}" placeholder="Пароль"
+                                   value="{{ form.password.value|default_if_none:'' }}">
+                            <div class="invalid-feedback">
+                                {{ form.password.errors.0 }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary"><i
+                                    class="bi bi-key-fill text-white"></i></span>
+                            <input type="password" name="password_confirm" class="form-control {% if form.password_confirm.errors %}is-invalid{% endif %}" placeholder="Повторите пароль"
+                                   value="{{ form.password_confirm.value|default_if_none:'' }}">
+                            <div class="invalid-feedback">
+                                {{ form.password_confirm.errors.0 }}
+                            </div>
+                        </div>
+                        <div class="d-grid col-12 mx-auto">
+                            <button class="btn btn-primary" type="sybmit"><span></span> Зарегистрироваться</button>
+                        </div>
+                        <p class="text-center mt-3">Уже есть аккаунт?
+                             <a class="text-primary" href="/login">Войти</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

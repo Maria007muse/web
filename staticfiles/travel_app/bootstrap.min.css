@@ -1351,7 +1351,7 @@ body {
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #ccc;
+    background-color: #ccccccba;
 }
 
 button,input,select,textarea {

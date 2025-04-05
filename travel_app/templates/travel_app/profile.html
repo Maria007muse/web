@@ -41,6 +41,18 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+   <style>
+.delete-icon {
+            cursor: pointer;
+            color: red;
+            font-size: 20px;
+            transition: color 0.3s;
+            margin-left: 10px;
+        }
+        .delete-icon:hover {
+            color: darkred;
+        }
+    </style>
 </head>
 <body>
 
@@ -88,28 +100,76 @@
         </div>
     </div>
 
-    <main id="main" class="site-main">
+<main id="main" class="site-main">
     <section class="site-section subpage-site-section section-blog">
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <article class="blog-post">
-                        <div class="post-content">
-                            <h3 class="post-title">Ваши сохраненные локации:</h3>
-                            {% if user.userprofile.results.all %}
-                                <ul>
-                                    {% for result in user.userprofile.results.all %}
-                                        <li>
-                                            {{ result.recommendation }}
-                                            <a href="{% url 'delete_result' result.id %}">Удалить</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <p>У вас пока нет сохраненных локаций.</p>
-                            {% endif %}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#saved-locations" aria-controls="saved-locations" role="tab" data-toggle="tab">Сохраненные локации</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#my-reviews" aria-controls="my-reviews" role="tab" data-toggle="tab">Мои отзывы</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="saved-locations">
+                            <article class="blog-post">
+                                <div class="post-content">
+                                    <h3 class="post-title">Ваши сохраненные локации:</h3>
+                                    {% if user.userprofile.results.all %}
+                                        <ul>
+                                            {% for result in user.userprofile.results.all %}
+                                                <li>
+                                                    <span>{{ result.recommendation }}</span>
+                                                    <form method="post" action="{% url 'delete_result' result.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="delete-icon">&#128465;</button>
+                                                    </form>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>У вас пока нет сохраненных локаций.</p>
+                                    {% endif %}
+                                </div>
+                            </article>
                         </div>
-                    </article>
+                        <div role="tabpanel" class="tab-pane" id="my-reviews">
+    <article class="blog-post">
+        <div class="post-content">
+            <h3 class="post-title">Мои отзывы:</h3>
+            {% if user.userprofile.reviews.all %}
+                <ul>
+                    {% for review in user.userprofile.reviews.all %}
+                        <li>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h4>{{ review.destination.recommendation }}</h4>
+        <p>Рейтинг: {{ review.rating }}</p>
+        <p>{{ review.text }}</p>
+        <p>Дата: {{ review.created_at }}</p>
+    </div>
+    <form method="post" action="{% url 'delete_review' review.id %}" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="delete-icon">&#128465;</button>
+    </form>
+</div>
+
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Вы еще не оставляли отзывов.</p>
+            {% endif %}
+        </div>
+    </article>
+</div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,6 +207,14 @@
     <script src="../../static/js/jquery.countTo.min.js"></script>
     <script src="../../static/js/jquery.shuffle.min.js"></script>
     <script src="../../static/js/script.js"></script>
-  
+
+<script>
+    $(document).ready(function () {
+        $('.nav-tabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+</script>
 </body>
 </html>

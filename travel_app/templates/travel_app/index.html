@@ -101,11 +101,7 @@
                                 <img src="{{ destination.image.url }}" class="img-res" alt="">
                             {% endif %}
                             <h4 class="portfolio-item-title">{{ destination.recommendation }}</h4>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'add_to_profile' recommendation=destination.recommendation %}"><i class="fa fa-plus" aria-hidden="true"></i> Добавить в профиль</a>
-                            {% else %}
-                                <a href="{% url 'login' %}"><i class="fa fa-plus" aria-hidden="true"></i> Добавить в профиль</a>
-                            {% endif %}
+                            <a href="{% url 'destination_detail' pk=destination.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 {% endfor %}

@@ -1,0 +1,259 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Добавить отзыв | Find Your Travel</title>
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,600,700" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- Favicon
+    ================================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon.png' %}">
+
+    <!-- CSS Files -->
+    <link href="{% static 'travel_app/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'travel_app/style.css' %}" rel="stylesheet">
+    <link href="{% static 'travel_app/responsive.css' %}" rel="stylesheet">
+
+    <style>
+        .review-block {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .review-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .stars {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .star {
+            font-size: 2em;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .star.selected {
+            color: #FFD700; /* Цвет выбранных звезд */
+        }
+        .star:hover {
+            color: #FFD700; /* Цвет при наведении */
+        }
+         .rating-hint {
+            font-size: 0.9em;
+            color: #999;
+        }
+         .rating-hint:hover .tooltip {
+            display: block; /* Отображаем подсказку при наведении на подсказку */
+        }
+        .tooltip {
+            display: none; /* Скрытая по умолчанию */
+            position: absolute;
+            background-color: #000;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 999;
+        }
+        .comment-box {
+            margin: 0 auto;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            resize: none;
+        }
+        .submit-btn {
+            margin-top: 15px;
+        }
+        .messages {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<header id="masthead" class="site-header site-header-white">
+    <nav id="primary-navigation" class="site-navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="{% url 'index' %}" class="site-title"><span>Find Your Travel</span></a>
+            </div>
+            <div class="collapse navbar-collapse" id="agency-navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'index' %}">Главная</a></li>
+                    <li><a href="{% url 'leisure' %}">Поиск отдыха</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Профиль</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Профиль</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div id="hero" class="hero overlay subpage-hero" style="background-image: url('{{ destination.image.url }}');">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>{{ destination.recommendation }}</h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item active">{{ destination.recommendation }}</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<main id="main" class="site-main">
+    <section class="site-section subpage-site-section section-project">
+        <div class="container">
+            <div class="review-block">
+                <div class="review-title">Отзыв</div>
+                {% if messages %}
+                <div id="message-container">
+                    {% for message in messages %}
+                    <div class="messages">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <form method="post" action="{% url 'add_review' pk=destination.pk %}">
+                    {% csrf_token %}
+                    <div class="stars" title="Rate">
+                        <span class="fa fa-star star" data-value="1" title="Ужасно"><span class="tooltip">Ужасно</span></span>
+                        <span class="fa fa-star star" data-value="2" title="Плохо"><span
+                                class="tooltip">Плохо</span></span>
+                        <span class="fa fa-star star" data-value="3" title="Нормально"><span
+                                class="tooltip">Нормально</span></span>
+                        <span class="fa fa-star star" data-value="4" title="Хорошо"><span class="tooltip">Хорошо</span></span>
+                        <span class="fa fa-star star" data-value="5" title="Отлично"><span
+                                class="tooltip">Отлично</span></span>
+                    </div>
+                    <div class="comment-title">Напишите свое мнение</div>
+<textarea class="form-control comment-box" name="text" rows="5" id="comment-box">{% if form.text.value %}{{ form.text.value }}{% endif %}</textarea>
+<small id="char-count">0/100 символов</small>
+                <br>
+<button type="submit" class="btn btn-primary submit-btn">Добавить</button>
+<input type="hidden" name="rating" id="rating-input" value="{% if form.rating.value %}{{ form.rating.value }}{% else %}0{% endif %}">
+
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="colophon" class="site-footer">
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="social-links">
+                        <a class="twitter-bg" href="#"><i class="fa fa-twitter"></i></a>
+                        <a class="facebook-bg" href="#"><i class="fa fa-facebook"></i></a>
+                        <a class="pinterest" href="#"><i class="fa fa-pinterest"></i></a>
+                        <a class="linkedin-bg" href="#"><i class="fa fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="text-right">
+                        <p>&copy; FindYourTravel</p>
+                        <p>All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript Files -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'js/jquery.slicknav.min.js' %}"></script>
+<script src="{% static 'js/jquery.countTo.min.js' %}"></script>
+<script src="{% static 'js/jquery.shuffle.min.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        var selectedStarValue = 0;
+
+        function hoverStars(value) {
+            if (selectedStarValue === 0) {
+                $('.star').removeClass('selected');
+                $('.star[data-value="' + value + '"]').prevAll('.star').addBack().addClass('selected');
+            }
+        }
+
+        $('.star').hover(function() {
+            var value = $(this).data('value');
+            var title = $(this).attr('title');
+            $('.rating-hint').text(title);
+            hoverStars(value);
+        }, function() {
+            $('.rating-hint').text('');
+            if (selectedStarValue === 0) {
+                $('.star').removeClass('selected');
+            }
+        });
+
+        $('.star').on('click', function() {
+            var value = $(this).data('value');
+            $('.star').removeClass('selected');
+            $(this).prevAll('.star').addBack().addClass('selected');
+            selectedStarValue = value;
+            $('#rating-input').val(value);
+        });
+
+        var initialRating = $('#rating-input').val();
+        if (initialRating > 0) {
+            $('.star[data-value="' + initialRating + '"]').prevAll('.star').addBack().addClass('selected');
+            selectedStarValue = initialRating;
+        }
+
+        var commentBox = $('#comment-box');
+        var charCount = $('#char-count');
+
+        commentBox.on('input', function() {
+            var textLength = commentBox.val().length;
+            charCount.text(textLength + '/50 символов');
+        });
+        charCount.text(commentBox.val().length + '/50 символов');
+    });
+</script>
+
+</body>
+</html>
+
+
+

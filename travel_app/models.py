@@ -19,6 +19,10 @@ class Destination(models.Model):
     image = models.ImageField(upload_to='destination_images/')
     recommendation = models.CharField(max_length=255, default="")
 
+    title = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    additional_image = models.ImageField(upload_to='destination_additional_images/', null=True, blank=True)
+
     def __str__(self):
         return self.recommendation
 
@@ -33,6 +37,7 @@ class Result(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     results = models.ManyToManyField('Result', blank=True)
+    reviews = models.ManyToManyField('Review', blank=True, related_name='profile_reviews')
 
     def add_result(self, destination):
         result = Result.objects.create(user=self.user, recommendation=destination.recommendation)
@@ -42,7 +47,23 @@ class UserProfile(models.Model):
         result = Result.objects.get(id=result_id)
         self.results.remove(result)
 
+    def add_review(self, review):
+        self.reviews.add(review)
+
+    def delete_review(self, review_id):
+        review = Review.objects.get(id=review_id)
+        self.reviews.remove(review)
+
     def __str__(self):
         return self.user.username
 
 
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    destination = models.ForeignKey(Destination, related_name='reviews', on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.destination.recommendation}'

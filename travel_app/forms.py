@@ -1,7 +1,7 @@
-# forms.py
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Destination as DestinationModel  # Изменение имени модели
+from .models import Destination as DestinationModel
+from .models import Review
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.forms import PasswordInput, ModelForm
@@ -9,7 +9,7 @@ from django.core.validators import validate_email
 
 class SearchForm(forms.ModelForm):
     class Meta:
-        model = DestinationModel  # Использование измененного имени
+        model = DestinationModel
         fields = ['climate', 'activity_type', 'budget', 'popularity', 'cultural_diversity']
 
     climate = forms.ChoiceField(
@@ -43,13 +43,10 @@ class SearchForm(forms.ModelForm):
             if field_name != 'id':
                 field.choices = [(str(key), value) for key, value in field.choices]
 
-
-# форма авторизации
 class LoginForm(forms.Form):
     username = forms.CharField(required=True, label='Username')
     password = forms.CharField(required=True, label='Пароль')
 
-# форма регистрации
 class RegisterForm(ModelForm):
     class Meta:
         model = get_user_model()
@@ -70,7 +67,6 @@ class RegisterForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(RegisterForm, self).clean()
-        # валидация паролей
         password = cleaned_data.get("password")
         password_confirm = cleaned_data.get("password_confirm")
 
@@ -78,13 +74,11 @@ class RegisterForm(ModelForm):
             raise forms.ValidationError(
                 {'password_confirm': "Пароли не совпадают", 'password': ''}
             )
-        # валидация никнейма
         username = self.cleaned_data.get("username")
 
         if get_user_model().objects.filter(username=username).exists():
             raise forms.ValidationError({'username': "Такой логин уже занят"})
 
-        # валидация email
         try:
             validate_email(self.cleaned_data.get("email"))
         except ValidationError as e:
@@ -92,4 +86,11 @@ class RegisterForm(ModelForm):
 
         return cleaned_data
 
-
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'text']
+        widgets = {
+            'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),
+            'text': forms.Textarea(attrs={'rows': 5}),
+        }

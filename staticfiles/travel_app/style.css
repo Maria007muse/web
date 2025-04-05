@@ -79,7 +79,6 @@ p + p {
     border-radius: 50px;
     color: #f5f5f5;
     background-color: #73563d47;
-    padding: 0;
     transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
     -moz-transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
     -webkit-transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
@@ -100,11 +99,15 @@ p + p {
 .btn-gray {
     background-color: #f5f5f8;
     color: #26272d;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .btn-green {
     background-color: #6fc754;
-    color: #fff;  
+    color: #fff;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .btn:hover,
@@ -119,6 +122,22 @@ button.btn:focus {
 .btn-gray:focus {
     background-color: #6fc754;
     color: #fff;    
+}
+
+a.btn-profile {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 10%;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a.btn-profile:hover {
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
 }
 
 /* 

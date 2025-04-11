@@ -85,12 +85,20 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'travel_db',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'postgres',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'travel_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'NAME': 'travel_db_br3f',
+        'USER': 'travel_db_br3f_user',
+        'PASSWORD': 'pW1X4nJVMXntWhFqeomFBzGiu6Lnyawg',
+        'HOST': 'dpg-cvsmhmgdl3ps73841big-a',
         'PORT': '5432',
     }
 }

@@ -1,0 +1,164 @@
+
+/* Общие стили для .delete-icon */
+.delete-icon {
+    cursor: pointer;
+    color: red;
+    font-size: 20px;
+    transition: color 0.3s;
+    margin-left: 10px;
+    background: none;
+    border: none;
+}
+.delete-icon:hover {
+    color: darkred;
+}
+
+/* Стили для review-block */
+.review-block {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Стили для reviews-section */
+.reviews-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Стили для average-rating */
+.average-rating {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Стили для review-header */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.review-header strong {
+    font-size: 16px;
+    font-weight: bold;
+}
+.review-header span {
+    font-size: 14px;
+    color: #666;
+}
+.review-header .delete-icon {
+    font-size: 18px;
+}
+
+/* Стили для review-text */
+.review-text {
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    word-wrap: break-word;
+}
+
+/* Стили для stars */
+.stars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+.fa-star,
+.star {
+    font-size: 20px;
+    cursor: pointer;
+    color: gray;
+    transition: color 0.3s;
+}
+.fa-star.checked,
+.star.selected,
+.fa-star:hover,
+.star:hover {
+    color: #FFD700;
+}
+
+/* Стили для review-content */
+.review-content {
+    padding-bottom: 10px;
+}
+
+/* Стили для heart-button */
+.heart-button {
+    display: inline-block;
+    font-size: 40px;
+    text-decoration: none;
+    color: #c59a9a;
+    transition: color 0.3s ease;
+    padding: 5px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.heart-outline,
+.heart-filled {
+    transition: color 0.3s ease;
+    font-size: inherit;
+}
+.heart-outline:hover {
+    color: #a94242;
+}
+.heart-filled {
+    color: #FF0000;
+}
+
+/* Стили для review-title */
+.review-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+/* Стили для rating-hint и tooltip */
+.rating-hint {
+    font-size: 0.9em;
+    color: #999;
+}
+.rating-hint:hover .tooltip {
+    display: block;
+}
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 999;
+}
+
+/* Стили для comment-box */
+.comment-box {
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    resize: none;
+}
+
+/* Стили для submit-btn */
+.submit-btn {
+    margin-top: 15px;
+}
+
+/* Стили для messages */
+.messages {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+}

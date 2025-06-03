@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('', home, name='index'),
-    path('leisure/', search, name='leisure'),
+    path('search/', search, name='search'),
     path('login', loginPage, name='login'),
     path('register', registerPage, name='register'),
     path('profile/', profile, name='profile'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('destination/<int:pk>/review/', add_review, name='add_review'),
     path('delete_review/<int:pk>/', delete_review, name='delete_review'),
     path('destination/<int:pk>/toggle_favorite/', toggle_favorite, name='toggle_favorite'),
+    path('chatbot/', chatbot, name='chatbot'),
 ]

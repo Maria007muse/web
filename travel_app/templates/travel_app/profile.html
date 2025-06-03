@@ -1,220 +1,91 @@
-{% load static %}
+<!-- travel_app/templates/travel_app/profile.html -->
+{% extends 'travel_app/base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% block title %}Profile | Find Your Travel{% endblock %}
 
-    <!-- Basic Page Needs
-    ================================================== -->
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>Profile | Find Your Travel</title>
-
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
-
-    <!-- Mobile Specific Metas
-    ================================================== -->
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,600,700" rel="stylesheet">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-
-    <!-- Favicon
-    ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="../../static/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../static/img/favicon.png">
-
-    <link href="../../static/travel_app/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../../static/travel_app/style.css" rel="stylesheet">
-    <link href="../../static/travel_app/responsive.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-   <style>
-.delete-icon {
-            cursor: pointer;
-            color: red;
-            font-size: 20px;
-            transition: color 0.3s;
-            margin-left: 10px;
-        }
-        .delete-icon:hover {
-            color: darkred;
-        }
-    </style>
-</head>
-<body>
-
-    <header id="masthead" class="site-header site-header-white">
-        <nav id="primary-navigation" class="site-navigation">
-            <div class="container">
-
-                <div class="navbar-header">
-                   
-                    <a href="{% url 'index' %}" class="site-title"><span>Find Your Travel</span></a>
-
-                </div>
-
-                <div class="collapse navbar-collapse" id="agency-navbar-collapse">
-
-                    <ul class="nav navbar-nav navbar-right">
-
-                        <li><a href="{% url 'index' %}">Главная</a></li>
-                        <li><a href="{% url 'leisure' %}">Поиск отдыха</a></li>
-
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
-                            <li><a href="{% url 'logout' %}">Выйти</a></li>
-                        {% else %}
-                            <li><a href="{% url 'login' %}">Профиль</a></li>
-                        {% endif %}
-                        </a></li>
-
-                    </ul>
-                </div>
-
-            </div>   
-        </nav>
-    </header>
-
+{% block content %}
     <div id="hero" class="hero overlay subpage-hero blog-hero">
         <div class="hero-content">
             <div class="hero-text">
                 <h1>Профиль</h1>
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">Привет, {{ user.username }}</li>
+                    <li class="breadcrumb-item active">Привет, {{ user.username }}</li>
                 </ol>
-
             </div>
         </div>
     </div>
 
-<main id="main" class="site-main">
-    <section class="site-section subpage-site-section section-blog">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
-                            <a href="#saved-locations" aria-controls="saved-locations" role="tab" data-toggle="tab">Сохраненные локации</a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#my-reviews" aria-controls="my-reviews" role="tab" data-toggle="tab">Мои отзывы</a>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="saved-locations">
-                            <article class="blog-post">
-                                <div class="post-content">
-                                    <h3 class="post-title">Ваши сохраненные локации:</h3>
-                                    {% if user.userprofile.results.all %}
-                                        <ul>
-                                            {% for result in user.userprofile.results.all %}
-                                                <li>
-                                                    <span>{{ result.recommendation }}</span>
-                                                    <form method="post" action="{% url 'delete_result' result.id %}" style="display:inline;">
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="delete-icon">&#128465;</button>
-                                                    </form>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% else %}
-                                        <p>У вас пока нет сохраненных локаций.</p>
-                                    {% endif %}
-                                </div>
-                            </article>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="my-reviews">
-    <article class="blog-post">
-        <div class="post-content">
-            <h3 class="post-title">Мои отзывы:</h3>
-            {% if user.userprofile.reviews.all %}
-                <ul>
-                    {% for review in user.userprofile.reviews.all %}
-                        <li>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <h4>{{ review.destination.recommendation }}</h4>
-        <p>Рейтинг: {{ review.rating }}</p>
-        <p>{{ review.text }}</p>
-        <p>Дата: {{ review.created_at }}</p>
-    </div>
-    <form method="post" action="{% url 'delete_review' review.id %}" style="display: inline;">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" class="delete-icon">&#128465;</button>
-    </form>
-</div>
-
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>Вы еще не оставляли отзывов.</p>
-            {% endif %}
-        </div>
-    </article>
-</div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-
-    <footer id="colophon" class="site-footer">
-        <div class="copyright">
+    <main id="main" class="site-main">
+        <section class="site-section subpage-site-section section-blog">
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-8">
-                        <div class="social-links">
-                            <a class="twitter-bg" href="#"><i class="fa fa-twitter"></i></a>
-                            <a class="facebook-bg" href="#"><i class="fa fa-facebook"></i></a>
-                            <a class="pinterest" href="#"><i class="fa fa-pinterest"></i></a>
-                            <a class="linkedin-bg" href="#"><i class="fa fa-linkedin"></i></a>
-                        </div><!-- /.social-links -->
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="text-right">
-                            <p>&copy; FindYourTravel</p>
-                            <p>All Rights Reserved</p>
+                    <div class="col-md-8">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#saved-locations" aria-controls="saved-locations" role="tab" data-toggle="tab">Сохраненные локации</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#my-reviews" aria-controls="my-reviews" role="tab" data-toggle="tab">Мои отзывы</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="saved-locations">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Ваши сохраненные локации:</h3>
+                                        {% if user.userprofile.results.all %}
+                                            <ul>
+                                                {% for result in user.userprofile.results.all %}
+                                                    <li>
+                                                        <span>{{ result.recommendation }}</span>
+                                                        <form method="post" action="{% url 'delete_result' result.id %}" style="display:inline;">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="delete-icon">🗑</button>
+                                                        </form>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>У вас пока нет сохраненных локаций.</p>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="my-reviews">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Мои отзывы:</h3>
+                                        {% if user.userprofile.reviews.all %}
+                                            <ul>
+                                                {% for review in user.userprofile.reviews.all %}
+                                                    <li>
+                                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                            <div>
+                                                                <h4>{{ review.destination.recommendation }}</h4>
+                                                                <p>Рейтинг: {{ review.rating }}</p>
+                                                                <p>{{ review.text }}</p>
+                                                                <p>Дата: {{ review.created_at }}</p>
+                                                            </div>
+                                                            <form method="post" action="{% url 'delete_review' review.id %}" style="display: inline;">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="next" value="{{ request.path }}">
+                                                                <button type="submit" class="delete-icon">🗑</button>
+                                                            </form>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>Вы еще не оставляли отзывов.</p>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="../../static/js/bootstrap.min.js"></script>
-    <script src="../../static/js/bootstrap-select.min.js"></script>
-    <script src="../../static/js/jquery.slicknav.min.js"></script>
-    <script src="../../static/js/jquery.countTo.min.js"></script>
-    <script src="../../static/js/jquery.shuffle.min.js"></script>
-    <script src="../../static/js/script.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.nav-tabs a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-    });
-</script>
-</body>
-</html>
+        </section>
+    </main>
+{% endblock %}

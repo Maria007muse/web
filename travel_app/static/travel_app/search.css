@@ -1,0 +1,624 @@
+/* static/travel_app/search.css */
+:root {
+    --primary: #ff6f61; /* Розовый закат */
+    --secondary: #87ceeb; /* Голубое небо */
+    --accent: #f5e6cc; /* Бежевый */
+    --text: #4f484d;
+    --bg: #f5f5f8;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Top Filter Bar */
+.top-filter-bar {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+}
+
+.top-filter-bar .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.top-filter-bar .form-field {
+    /*flex: 1 1 200px;*/
+    min-width: 150px;
+}
+
+/* Modal */
+.modal-content.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-header, .modal-body {
+    border: none;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.close {
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+/* Filter Components */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    padding: 12px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+}
+
+.bootstrap-select .btn {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+}
+
+.checkbox-field, .tag-checkbox, .season-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.checkbox-field label, .tag-checkbox label, .season-checkbox label {
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* Toggle Switch for checkboxes */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+    margin-right: 10px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+    background-color: #ff6f61;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.switch-label {
+    vertical-align: middle;
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+.checkbox-field input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.checkbox-field input[type="checkbox"]:checked {
+    background: var(--primary);
+}
+
+.checkbox-field input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.checkbox-field input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 30px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--secondary);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--accent);
+    color: var(--text);
+}
+
+.btn-outline {
+    padding: 8px 20px;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    color: var(--primary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-favorite {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.btn-favorite.active, .btn-favorite:hover {
+    color: var(--primary);
+}
+
+/* Results Header */
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0 20px;
+}
+
+.results-header h4 {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    background: var(--bg);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.view-btn.active, .view-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    transition: all 0.3s ease;
+}
+
+.results-grid[data-view="list"] {
+    grid-template-columns: 1fr;
+}
+
+.destination-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.results-grid[data-view="grid"] .destination-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.results-grid[data-view="list"] .destination-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.results-grid[data-view="list"] .destination-img {
+    width: 200px;
+    height: 150px;
+}
+
+.results-grid[data-view="list"] .destination-info {
+    flex: 1;
+}
+
+.destination-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.destination-card:hover .destination-img {
+    transform: scale(1.05);
+}
+
+.destination-info {
+    padding: 20px;
+}
+
+.destination-info h4 {
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.destination-desc {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: none;
+}
+
+.results-grid[data-view="list"] .destination-desc {
+    display: block;
+}
+
+.destination-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    font-size: 12px;
+    padding: 5px 10px;
+    background: var(--bg);
+    border-radius: 10px;
+    color: var(--text);
+}
+
+.badge {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+.badge-recommended {
+    background: var(--secondary);
+    color: #fff;
+}
+
+.badge-match {
+    background: var(--accent);
+    color: var(--text);
+}
+
+.badge-popular {
+    background: var(--primary);
+    color: #fff;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Recommended Section */
+.recommended-section {
+    margin-top: 60px;
+    padding: 40px 0;
+    background: var(--bg);
+    border-radius: 16px;
+}
+
+.recommended-section h4 {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.recommended-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.recommended-slider .destination-card {
+    flex: 0 0 250px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.pagination ul {
+    display: flex;
+    gap: 10px;
+}
+
+.pagination li a {
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pagination li.active a,
+.pagination li a:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Tag and Season checkboxes */
+.tag-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag-checkbox {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 6px 16px;
+    margin: 4px 4px 4px 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tag-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.tag-checkbox label {
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.tag-checkbox input[type="checkbox"]:checked + label {
+    color: #fff;
+}
+
+.tag-checkbox:has(input[type="checkbox"]:checked) {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Active Filters */
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 16px;
+    padding: 6px 12px;
+    margin: 4px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.remove-filter {
+    margin-left: 8px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.remove-filter:hover {
+    color: var(--primary);
+}
+
+.bootstrap-select .filter-option-inner-inner {
+    color: #6c757d;
+}
+
+.bootstrap-select.show-tick .filter-option-inner-inner {
+    color: #495057;
+}
+
+@media (max-width: 768px) {
+    .top-filter-bar {
+        padding: 15px;
+    }
+
+    .top-filter-bar .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .top-filter-bar .form-field {
+        flex: 1 1 auto;
+    }
+
+    .results-grid[data-view="list"] .destination-card {
+        flex-direction: column;
+    }
+
+    .results-grid[data-view="list"] .destination-img {
+        width: 100%;
+        height: 180px;
+    }
+
+    .modal-dialog {
+        margin: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .results-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .view-toggle {
+        justify-content: center;
+    }
+
+    .destination-info h4 {
+        font-size: 16px;
+    }
+
+    .recommended-slider .destination-card {
+        flex: 0 0 200px;
+    }
+}
+
+.bootstrap-select .dropdown-menu .selected a {
+    background-color: #6fc754;
+    color: #fff;
+}
+
+.bootstrap-select .dropdown-menu .selected a:hover {
+    background-color: #5ba847;
+}
+
+.selectpicker-wrapper {
+    position: relative;
+}
+.selected-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: rgba(245, 230, 204, 0.8); /* Бежевый с прозрачностью */
+    color: var(--text);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    backdrop-filter: blur(2px);
+    display: none;
+}
+.selected-count:not(:empty) {
+    display: flex;
+}
+
+.filter-button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.total-selected-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+    display: none; /* по умолчанию скрыто */
+}
+
+

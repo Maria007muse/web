@@ -1,0 +1,112 @@
+<!-- travel_app/templates/travel_app/destination_detail.html -->
+{% extends 'travel_app/base.html' %}
+
+{% block title %}{{ destination.recommendation }}{% endblock %}
+
+{% block content %}
+    <div id="hero" class="hero overlay subpage-hero" style="background-image: url('{{ destination.image.url }}');">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>{{ destination.recommendation }}</h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                    <li class="breadcrumb-item active">{{ destination.recommendation }}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <main id="main" class="site-main">
+        <section class="site-section subpage-site-section section-project">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        {% if destination.image %}
+                            <div class="project-img">
+                                <img src="{{ destination.image.url }}" class="img-res" alt="{{ destination.title }}">
+                            </div>
+                        {% endif %}
+                        {% if destination.additional_image %}
+                            <div class="project-img">
+                                <img src="{{ destination.additional_image.url }}" class="img-res" alt="{{ destination.recommendation }} - additional">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <aside class="col-md-4">
+                        <div class="project-info">
+                            <h5>Описание</h5>
+                            <p class="project-description">{{ destination.description }}</p>
+                            {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'toggle_favorite' destination.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="heart-button">
+                                        {% if is_favorite %}
+                                            <span class="heart-filled">♡</span>
+                                        {% else %}
+                                            <span class="heart-outline">♡</span>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="heart-button">
+                                    <span class="heart-outline">♡</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </aside>
+
+                    <div class="col-md-8 offset-md-2">
+                        <div class="reviews-section">
+                            <h3>Отзывы</h3>
+                            <div class="average-rating">
+                                <div>
+                                    Рейтинг: {% if average_rating > 0 %}{{ average_rating|floatformat:1 }}{% else %}Нет оценок{% endif %}
+                                </div>
+                                <div class="stars">
+                                    {% for star in average_stars %}
+                                        <span class="fa fa-star {% if star %} checked {% endif %}"></span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% for review, stars in reviews_with_stars %}
+                                <div class="review-block">
+                                    <div class="review-header">
+                                        <strong>{{ review.user.username }}</strong>
+                                        <span>{{ review.created_at }}</span>
+                                        {% if review.user == request.user %}
+                                            <form method="post" action="{% url 'delete_review' review.id %}" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="{{ request.path }}">
+                                                <button type="submit" class="delete-icon">🗑</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                    <div class="review-text">
+                                        <h4>Отзыв</h4>
+                                        <p class="review-content">{{ review.text }}</p>
+                                    </div>
+                                    <div class="stars">
+                                        {% for star in stars %}
+                                            <span class="fa fa-star {% if star %} checked {% endif %}"></span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p>Пока нет отзывов.</p>
+                            {% endfor %}
+                        </div>
+
+                        {% if user.is_authenticated %}
+                            {% if not user_review %}
+                                <a href="{% url 'add_review' destination.pk %}" class="btn btn-primary">Добавить отзыв</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary">Добавить отзыв</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

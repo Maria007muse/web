@@ -1,0 +1,255 @@
+{% extends 'travel_app/base.html' %}
+{% load static %}
+
+{% block title %}Поиск отдыха | Find Your Travel{% endblock %}
+
+{% block extra_styles %}
+<link href="{% static 'travel_app/search.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div id="hero" class="hero overlay subpage-hero" style="background-image: url('{% static 'img/searchphoto.jpg' %}');">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Найдите идеальный отдых</h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item active">Поиск</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<!-- Top Filter Bar -->
+<div class="top-filter-bar glass-effect">
+    <div class="container">
+        <form id="quickSearchForm" method="get" action="{% url 'search' %}">
+            <div class="filter-group">
+                <div class="form-field selectpicker-wrapper" data-field-name="Климат">
+                    {{ form.climate }}
+                    <span class="selected-count"></span>
+                </div>
+                <div class="form-field selectpicker-wrapper" data-field-name="Активность">
+                    {{ form.activity_types }}
+                    <span class="selected-count"></span>
+                </div>
+                <div class="form-field selectpicker-wrapper" data-field-name="Сезон">
+                    {{ form.season }}
+                    <span class="selected-count"></span>
+                </div>
+<div class="form-field tags-field">
+    <label>Теги:</label>
+    <div class="tag-list">
+        {% for value, label in form.tags.field.choices %}
+            <div class="tag-checkbox">
+                <input type="checkbox" name="tags" value="{{ value }}"
+                       id="id_tags_{{ forloop.counter0 }}"
+                       {% if value in form.tags.value %}checked{% endif %}>
+                <label for="id_tags_{{ forloop.counter0 }}">{{ label }}</label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+                <!-- Скрытые поля для остальных фильтров -->
+                <div style="display: none;">
+                    {{ form.country }}
+                    {{ form.vibe }}
+                    {{ form.comfort_level }}
+                    {{ form.family_friendly }}
+                    {{ form.visa_required }}
+                    {{ form.language }}
+                    {{ form.sort_by }}
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Найти</button>
+<div class="filter-button-wrapper">
+  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#allFiltersModal">
+    Все фильтры
+  </button>
+  <span id="totalSelectedCount" class="total-selected-count"></span>
+</div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for All Filters -->
+<div class="modal fade" id="allFiltersModal" tabindex="-1" aria-labelledby="allFiltersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h5 class="modal-title" id="allFiltersModalLabel">Все фильтры</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fullSearchForm" method="get" action="{% url 'search' %}">
+                    <div class="filter-group">
+                        <div class="form-field">{{ form.country }}</div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Активность">
+                            {{ form.activity_types }}
+                            <span class="selected-count"></span>
+                        </div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Сезон">
+                            {{ form.season }}
+                            <span class="selected-count"></span>
+                        </div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Климат">
+                            {{ form.climate }}
+                            <span class="selected-count"></span>
+                        </div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Атмосфера">
+                            {{ form.vibe }}
+                            <span class="selected-count"></span>
+                        </div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Уровень комфорта">
+                            {{ form.comfort_level }}
+                            <span class="selected-count"></span>
+                        </div>
+                        <div class="form-field">
+                            <label class="switch">
+                                {{ form.family_friendly }}
+                                <span class="slider round"></span>
+                                <span class="switch-label">Для детей</span>
+                            </label>
+                        </div>
+                        <div class="form-field">
+                            <label class="switch">
+                                {{ form.visa_required }}
+                                <span class="slider round"></span>
+                                <span class="switch-label">Нужна виза</span>
+                            </label>
+                        </div>
+<div class="form-field tags-field">
+    <label>Теги:</label>
+    <div class="tag-list">
+        {% for value, label in form.tags.field.choices %}
+            <div class="tag-checkbox">
+                <input type="checkbox" name="tags" value="{{ value }}"
+                       id="id_tags_{{ forloop.counter0 }}"
+                       {% if value in form.tags.value %}checked{% endif %}>
+                <label for="id_tags_{{ forloop.counter0 }}">{{ label }}</label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+                        <div class="form-field selectpicker-wrapper" data-field-name="Язык общения">
+                            {{ form.language }}
+                            <span class="selected-count"></span>
+                        </div>
+                    </div>
+                    <div class="form-field">{{ form.sort_by }}</div>
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                        <a href="{% url 'search' %}" class="btn btn-secondary">Очистить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main id="main" class="site-main">
+    <section class="site-section subpage-site-section section-portfolio">
+        <div class="container">
+            <div class="results-header">
+                <h4>Найдено {{ destinations.paginator.count }} направлений</h4>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid"><i class="fa fa-th"></i> Сетка</button>
+                    <button class="view-btn" data-view="list"><i class="fa fa-list"></i> Список</button>
+                </div>
+            </div>
+
+            {% if message %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endif %}
+
+            <div class="results-grid" id="resultsGrid" data-view="grid">
+                {% if destinations %}
+                    {% for item in destinations %}
+                        <div class="destination-card">
+                            {% if item.destination.image %}
+                                <img src="{{ item.destination.image.url }}" class="destination-img" alt="{{ item.destination.recommendation }}">
+                            {% endif %}
+                            <div class="destination-info">
+                                <h4>{{ item.destination.recommendation }}</h4>
+                                <p class="destination-desc">{{ item.destination.description|truncatewords:20 }}</p>
+                                <div class="destination-tags">
+                                    <span class="tag">{{ item.destination.season }}</span>
+                                    <span class="tag">{{ item.destination.climate }}</span>
+                                </div>
+                                {% if item.is_recommended %}
+                                    <span class="badge badge-recommended">Рекомендация</span>
+                                {% else %}
+                                    <span class="badge badge-match">Совпадение: {{ item.score_percentage|floatformat:1 }}%</span>
+                                {% endif %}
+                                {% if item.is_popular %}
+                                    <span class="badge badge-popular">Популярное</span>
+                                {% endif %}
+                                <div class="card-actions">
+                                    <a href="{% url 'destination_detail' pk=item.destination.pk %}" class="btn btn-outline">Подробнее</a>
+                                    <button class="btn btn-favorite {% if item.is_favorite %}active{% endif %}" data-pk="{{ item.destination.pk }}">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <nav class="pagination">
+    <ul>
+        {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, values in request.GET.lists %}{% if key != 'page' %}{% for val in values %}&{{ key }}={{ val }}{% endfor %}{% endif %}{% endfor %}">«</a>
+            </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            <li {% if page_obj.number == num %}class="active"{% endif %}>
+                <a href="?page={{ num }}{% for key, values in request.GET.lists %}{% if key != 'page' %}{% for val in values %}&{{ key }}={{ val }}{% endfor %}{% endif %}{% endfor %}">{{ num }}</a>
+            </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}{% for key, values in request.GET.lists %}{% if key != 'page' %}{% for val in values %}&{{ key }}={{ val }}{% endfor %}{% endif %}{% endfor %}">»</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+                {% endif %}
+            </div>
+
+            {% if recommended_destinations %}
+                <div class="recommended-section">
+                    <h4>Похожие направления</h4>
+                    <div class="recommended-slider">
+                        {% for item in recommended_destinations %}
+                            <div class="destination-card">
+                                {% if item.destination.image %}
+                                    <img src="{{ item.destination.image.url }}" class="destination-img" alt="{{ item.destination.recommendation }}">
+                                {% endif %}
+                                <div class="destination-info">
+                                    <h4>{{ item.destination.recommendation }}</h4>
+                                    <p>{{ item.destination.country }}</p>
+                                    {% if item.is_popular %}
+                                        <span class="badge badge-popular">Популярное</span>
+                                    {% endif %}
+                                    <a href="{% url 'destination_detail' pk=item.destination.pk %}" class="btn btn-outline">Подробнее</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
+
+{% block extra_scripts %}
+<script src="{% static 'js/search.js' %}"></script>
+{% endblock %}
+{% endblock %}
+
+

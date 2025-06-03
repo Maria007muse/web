@@ -5,9 +5,9 @@
     justify-content: center;
     margin-bottom: 20px;
     }
+
 .form-field {
     display: inline-block;
-    margin: 0 5px;
     margin: 5px;
     }
 
@@ -424,7 +424,7 @@ select {
     padding: 5px 0;
     min-width: 100%;
     overflow: hidden;
-    -webkit-box-sizing: border-box;
+    /*-webkit-box-sizing: border-box;*/
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     z-index: 9999;
@@ -500,7 +500,7 @@ select {
 }
 
 .accordion .panel {
-    border: 0;
+    /*border: 0;*/
     box-shadow: none;
     border: 1px solid #26272d;
     border-bottom: 0;
@@ -655,7 +655,7 @@ html, body {
 ================================================== */
 .site-header {
     position: absolute;
-    padding: 50px 0 0;
+    /*padding: 50px 0 0;*/
     background-color: transparent;
     width: 100%;
     z-index: 3;

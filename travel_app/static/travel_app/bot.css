@@ -1,0 +1,41 @@
+.chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Montserrat', sans-serif;
+    animation: slideIn 0.3s ease-in;
+}
+#chat-output {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+#chat-output p {
+    margin: 5px 0;
+    color: #333;
+}
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #87ceeb;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.btn-primary {
+    background-color: #ff6f61;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 15px;
+    color: white;
+    cursor: pointer;
+}
+@keyframes slideIn {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

@@ -39,6 +39,122 @@
             </section>
         {% endif %}
     
+    {% if request.user.is_authenticated and similar_users_recommendations %}
+        <section class="site-section section-recommendations">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="heading-separator">Похожие путешественники выбирают</h2>
+                </div>
+                <div class="row">
+                    {% for rec in similar_users_recommendations %}
+                        <div class="col-lg-3 col-md-4 col-xs-6">
+                            <div class="portfolio-item">
+                                {% if rec.destination.image %}
+                                    <img src="{{ rec.destination.image.url }}" class="img-res" alt="">
+                                {% endif %}
+                                <h4 class="portfolio-item-title">{{ rec.destination.recommendation }}</h4>
+                                <a href="{% url 'destination_detail' pk=rec.destination.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if seasonal_destinations %}
+    <section class="site-section section-recommendations">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="heading-separator">Популярно {{ seasonal_destinations.0.season|lower }}</h2>
+            </div>
+            <div class="row">
+                {% for dest in seasonal_destinations %}
+                    <div class="col-lg-3 col-md-4 col-xs-6">
+                        <div class="portfolio-item">
+                            {% if dest.image %}
+                                <img src="{{ dest.image.url }}" class="img-res" alt="">
+                            {% endif %}
+                            <h4 class="portfolio-item-title">{{ dest.recommendation }}</h4>
+                            <a href="{% url 'destination_detail' pk=dest.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+    {% if personalized_seasonal %}
+<section class="site-section section-recommendations">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="heading-separator">На волне сезона</h2>
+        </div>
+        <div class="row">
+            {% for dest in personalized_seasonal %}
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <div class="portfolio-item">
+                        {% if dest.image %}
+                            <img src="{{ dest.image.url }}" class="img-res" alt="">
+                        {% endif %}
+                        <h4 class="portfolio-item-title">{{ dest.recommendation }}</h4>
+                        <a href="{% url 'destination_detail' pk=dest.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+    
+    {% if inspiration_recommendations %}
+<section class="site-section section-recommendations">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="heading-separator">Подборка для вдохновения</h2>
+        </div>
+        <div class="row">
+            {% for rec in inspiration_recommendations %}
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <div class="portfolio-item">
+                        {% if rec.destination.image %}
+                            <img src="{{ rec.destination.image.url }}" class="img-res" alt="">
+                        {% endif %}
+                        <h4 class="portfolio-item-title">{{ rec.destination.recommendation }}</h4>
+                        <a href="{% url 'destination_detail' pk=rec.destination.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+    
+    
+    {% if trending_recommendations %}
+<section class="site-section section-recommendations">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="heading-separator">Популярное сейчас</h2>
+        </div>
+        <div class="row">
+            {% for rec in trending_recommendations %}
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <div class="portfolio-item">
+                        {% if rec.destination.image %}
+                            <img src="{{ rec.destination.image.url }}" class="img-res" alt="">
+                        {% endif %}
+                        <h4 class="portfolio-item-title">{{ rec.destination.recommendation }}</h4>
+                        <a href="{% url 'destination_detail' pk=rec.destination.pk %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+    
 {#    <main id="main" class="site-main">#}
 {#        <section class="site-section section-features">#}
 {#            <div class="container">#}

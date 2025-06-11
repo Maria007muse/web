@@ -2,8 +2,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, validate_email
 from django.contrib.auth import get_user_model
-from django.forms import PasswordInput, ModelForm
-from .models import Destination, Review, ActivityType, Language, Tag, Vibe, ComfortLevel
+from django.forms import PasswordInput, ModelForm, formset_factory
+from .models import Destination, Review, ActivityType, Language, Tag, Vibe, ComfortLevel, InspirationPost, RoutePoint, \
+    Route
+
 
 class SearchForm(forms.Form):
     country = forms.CharField(
@@ -216,3 +218,110 @@ class ReviewForm(forms.ModelForm):
         if len(text.strip()) < 50:
             raise forms.ValidationError("Комментарий должен содержать не менее 50 символов.")
         return text
+
+
+class InspirationPostForm(forms.ModelForm):
+    class Meta:
+        model = InspirationPost
+        fields = ['image', 'description', 'destination', 'pending_destination_name', 'pending_destination_country', 'pending_destination_city', 'tags', 'vibe']
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Короткое описание (до 500 символов)'}),
+            'destination': forms.Select(attrs={'class': 'form-control selectpicker', 'data-live-search': 'true'}),
+            'pending_destination_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название места'}),
+            'pending_destination_country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Страна'}),
+            'pending_destination_city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Город (опционально)'}),
+            'tags': forms.SelectMultiple(attrs={'class': 'selectpicker', 'multiple': 'multiple', 'data-live-search': 'true'}),
+            'vibe': forms.SelectMultiple(attrs={'class': 'selectpicker', 'multiple': 'multiple', 'data-live-search': 'true'}),
+        }
+
+    pending_destination_name = forms.CharField(required=False)
+    pending_destination_country = forms.CharField(required=False)
+    pending_destination_city = forms.CharField(required=False)
+    tags = forms.MultipleChoiceField(
+        required=False,
+        choices=[(t.name, t.name) for t in Tag.objects.all()],
+        widget=forms.SelectMultiple(attrs={
+            'class': 'selectpicker',
+            'multiple': 'multiple',
+            'title': 'Теги',
+            'data-none-selected-text': 'Выберите теги',
+            'data-live-search': 'true',
+        })
+    )
+    vibe = forms.MultipleChoiceField(
+        required=False,
+        choices=[(v.name, v.name) for v in Vibe.objects.all()],
+        widget=forms.SelectMultiple(attrs={
+            'class': 'selectpicker',
+            'multiple': 'multiple',
+            'title': 'Атмосфера',
+            'data-none-selected-text': 'Выберите атмосферу',
+            'data-live-search': 'true',
+        })
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        destination = cleaned_data.get('destination')
+        pending_destination_name = cleaned_data.get('pending_destination_name')
+        pending_destination_description = cleaned_data.get('description')
+        tags = cleaned_data.get('tags')
+        vibe = cleaned_data.get('vibe')
+
+        if not destination and not pending_destination_name:
+            raise forms.ValidationError('Выберите место из списка или укажите новое место.')
+        if destination and pending_destination_name:
+            raise forms.ValidationError('Выберите только одно: либо место из списка, либо новое место.')
+        if pending_destination_name:
+            if not cleaned_data.get('pending_destination_country'):
+                raise forms.ValidationError('Укажите страну для нового места.')
+            if not pending_destination_description:
+                raise forms.ValidationError('Укажите описание для нового места.')
+            if not (tags or vibe):
+                raise forms.ValidationError('Для нового места укажите хотя бы один тег или атмосферу.')
+        return cleaned_data
+
+class RouteForm(forms.ModelForm):
+    class Meta:
+        model = Route
+        fields = ['title', 'description', 'is_public']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название маршрута'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Опишите ваш маршрут'}),
+            'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class RoutePointForm(forms.ModelForm):
+    date_time = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local', 'placeholder': 'Дата и время'}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['destination'].empty_label = 'Выберите место'
+        self.fields['destination'].queryset = Destination.objects.all().order_by('country', 'recommendation')
+
+    class Meta:
+        model = RoutePoint
+        fields = ['destination', 'custom_name', 'note', 'date_time']
+        widgets = {
+            'destination': forms.Select(attrs={'class': 'form-control selectpicker', 'data-live-search': 'true'}),
+            'custom_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название точки'}),
+            'note': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Заметка'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        destination = cleaned_data.get('destination')
+        custom_name = cleaned_data.get('custom_name')
+
+        if not destination and not custom_name:
+            raise ValidationError('Укажите место из списка или задайте своё название.')
+        if destination and custom_name:
+            raise ValidationError('Выберите только одно: место из списка или своё название.')
+
+        return cleaned_data
+
+RoutePointFormSet = formset_factory(RoutePointForm, extra=1)

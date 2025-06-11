@@ -1,0 +1,43 @@
+
+    .tab-content .post-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .tab-content .post-image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 15px;
+    }
+    .tab-content .post-content h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .tab-content .post-content p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    .tab-content .delete-icon {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    .tab-content .delete-icon:hover {
+        color: #ff8e53;
+    }
+    .likes-count {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+    }

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать пост</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b6b; /* Розовый закат */
+            --secondary: #87ceeb; /* Голубое небо */
+            --accent: #e8e6e2; /* Бежевый */
+            --text: #4f484d; /* Темный текст */
+            --bg: #f5f5f8; /* Светлый фон */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--accent) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .create-post-container {
+            max-width: 720px;
+            width: 100%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .create-post-container h2 {
+            font-weight: 600;
+            font-size: 26px;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            padding: 14px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text);
+            width: 100%;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.2);
+            outline: none;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            max-height: 300px;
+        }
+
+        select.form-control:not(.selectpicker) {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f484d'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+            background-position: right 12px center;
+            background-size: 18px;
+            background-repeat: no-repeat;
+        }
+
+        .form-control::placeholder {
+            color: #999;
+            font-weight: 400;
+        }
+
+        /* Кастомизация bootstrap-select */
+        .bootstrap-select .btn {
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text);
+            font-size: 15px;
+            padding: 14px;
+            width: 100%;
+            text-align: left;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bootstrap-select .btn:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.2);
+            outline: none;
+        }
+
+        .bootstrap-select .dropdown-menu {
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .bootstrap-select .dropdown-item {
+            font-size: 14px;
+            color: var(--text);
+            padding: 10px 15px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .bootstrap-select .dropdown-item:hover,
+        .bootstrap-select .dropdown-item.selected {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .bootstrap-select .bs-searchbox .form-control {
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .file-input-container {
+            position: relative;
+        }
+
+        .file-input-container input[type="file"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            background: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            color: transparent;
+            cursor: pointer;
+        }
+
+        .file-input-container input[type="file"]::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+
+        .file-input-container input[type="file"]::before {
+            content: 'Выбрать фото';
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .file-input-container input[type="file"]:hover::before {
+            background: #ff8e53;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), #ff8e53);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff8e53, var(--primary));
+        }
+
+        small.form-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 8px;
+            display: block;
+        }
+
+        .alert {
+            border-radius: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--text);
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--primary);
+        }
+
+        #new-place-fields {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 576px) {
+            .create-post-container {
+                padding: 20px;
+                margin: 15px;
+            }
+
+            .create-post-container h2 {
+                font-size: 22px;
+            }
+
+            .form-control {
+                font-size: 14px;
+                padding: 12px;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="create-post-container">
+        <h2>Создать пост</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Описание (до 500 символов)</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">Фото</label>
+                <div class="file-input-container">
+                    {{ form.image }}
+                    <span class="file-name" id="file-name">Файл не выбран</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.destination.id_for_label }}">Где это было?</label>
+                {{ form.destination }}
+                <small class="form-text">Начните вводить, чтобы найти место, или оставьте пустым и добавьте новое место ниже.</small>
+            </div>
+            <div id="new-place-fields">
+                <div class="form-group">
+                    <label for="{{ form.pending_destination_name.id_for_label }}">Название места</label>
+                    {{ form.pending_destination_name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.pending_destination_country.id_for_label }}">Страна</label>
+                    {{ form.pending_destination_country }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.pending_destination_city.id_for_label }}">Город (опционально)</label>
+                    {{ form.pending_destination_city }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.tags.id_for_label }}">Теги</label>
+                    {{ form.tags }}
+                    <small class="form-text">Выберите теги, чтобы описать настроение или стиль места.</small>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.vibe.id_for_label }}">Атмосфера</label>
+                    {{ form.vibe }}
+                    <small class="form-text">Опишите атмосферу места для вдохновения.</small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Опубликовать</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker();
+            $('#id_image').on('change', function() {
+                const fileName = this.files.length > 0 ? this.files[0].name : 'Файл не выбран';
+                $('#file-name').text(fileName);
+            });
+            $('#id_destination').on('change', function() {
+                if ($(this).val() === '') {
+                    $('#new-place-fields').slideDown(300);
+                } else {
+                    $('#new-place-fields').slideUp(300);
+                    $('#id_tags').val([]).selectpicker('refresh');
+                    $('#id_vibe').val([]).selectpicker('refresh');
+                }
+            });
+            if ($('#id_destination').val() === '') {
+                $('#new-place-fields').show();
+            } else {
+                $('#new-place-fields').hide();
+            }
+        });
+    </script>
+</body>
+</html>

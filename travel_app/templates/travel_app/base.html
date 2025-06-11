@@ -27,7 +27,7 @@
     <link href="{% static 'travel_app/style.css' %}" rel="stylesheet">
     <link href="{% static 'travel_app/responsive.css' %}" rel="stylesheet">
 <link href="{% static 'travel_app/custom.css' %}" rel="stylesheet">
-<link href="{% static 'travel_app/bot.css' %}" rel="stylesheet">
+{#<link href="{% static 'travel_app/bot.css' %}" rel="stylesheet">#}
 
     <!-- Поддержка HTML5 для старых браузеров -->
     <!--[if lt IE 9]>
@@ -50,6 +50,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{% url 'index' %}">Главная</a></li>
                         <li><a href="{% url 'search' %}">Поиск отдыха</a></li>
+                    <li><a href="{% url 'inspiration_feed' %}">Лента вдохновения</a></li>
                         {% if user.is_authenticated %}
                             <li><a href="{% url 'profile' %}">Профиль</a></li>
                             <li><a href="{% url 'logout' %}">Выйти</a></li>

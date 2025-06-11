@@ -1,7 +1,11 @@
-<!-- travel_app/templates/travel_app/profile.html -->
 {% extends 'travel_app/base.html' %}
+{% load static %}
 
-{% block title %}Profile | Find Your Travel{% endblock %}
+{% block title %}Профиль{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'travel_app/profile.css' %}">
+{% endblock %}
 
 {% block content %}
     <div id="hero" class="hero overlay subpage-hero blog-hero">
@@ -27,6 +31,18 @@
                             <li role="presentation">
                                 <a href="#my-reviews" aria-controls="my-reviews" role="tab" data-toggle="tab">Мои отзывы</a>
                             </li>
+                            <li role="presentation">
+                                <a href="#my-content" aria-controls="my-content" role="tab" data-toggle="tab">Мой контент</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#inspiration" aria-controls="inspiration" role="tab" data-toggle="tab">Вдохновение</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#liked-posts" aria-controls="liked-posts" role="tab" data-toggle="tab">Понравившиеся посты</a>
+                            </li>
+                            <li role="presentation">
+    <a href="#my-routes" aria-controls="my-routes" role="tab" data-toggle="tab">Мои маршруты</a>
+</li>
                         </ul>
 
                         <div class="tab-content">
@@ -82,10 +98,146 @@
                                     </div>
                                 </article>
                             </div>
+                            <div role="tabpanel" class="tab-pane" id="my-content">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Мой контент:</h3>
+                                        {% if user_posts %}
+                                            {% for post in user_posts %}
+                                                <div class="post-card glass-effect" data-post-id="{{ post.id }}">
+                                                    <div class="post-image">
+                                                        <img src="{{ post.image.url }}" alt="{{ post.description|truncatechars:50 }}">
+                                                    </div>
+                                                    <div class="post-content">
+                                                        <h4>
+                                                            {% if post.destination %}
+                                                                {{ post.destination.recommendation }}
+                                                            {% else %}
+                                                                {{ post.pending_destination.name }}
+                                                            {% endif %}
+                                                        </h4>
+                                                        <p>{{ post.description|truncatechars:100 }}</p>
+                                                        <p>Дата: {{ post.created_at|date:"d.m.Y" }}</p>
+                                                        <p class="likes-count">Лайков: {{ post.likes.count }}</p>
+                                                        <form method="post" action="{% url 'delete_post' post.id %}" style="display:inline">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                                            <button type="submit" class="delete-icon">🗑</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>Вы еще не создавали постов.</p>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="inspiration">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Вдохновение:</h3>
+                                        {% if saved_posts %}
+                                            {% for post in saved_posts %}
+                                                <div class="post-card glass-effect" data-post-id="{{ post.id }}">
+                                                    <div class="post-image">
+                                                        <img src="{{ post.image.url }}" alt="{{ post.description|truncatechars:50 }}">
+                                                    </div>
+                                                    <div class="post-content">
+                                                        <h4>
+                                                            {% if post.destination %}
+                                                                {{ post.destination.recommendation }}
+                                                            {% else %}
+                                                                {{ post.pending_destination.name }}
+                                                            {% endif %}
+                                                        </h4>
+                                                        <p>{{ post.description|truncatechars:100 }}</p>
+                                                        <p>Автор: {{ post.user.username }} | Дата: {{ post.created_at|date:"d.m.Y" }}</p>
+                                                        <p class="likes-count">Лайков: {{ post.likes.count }}</p>
+                                                        <form method="post" action="{% url 'remove_saved_post' post.id %}" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                                            <button type="submit" class="delete-icon">🗑</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>У вас пока нет сохраненных постов для вдохновения.</p>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="liked-posts">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Понравившиеся посты:</h3>
+                                        {% if liked_posts %}
+                                            {% for post in liked_posts %}
+                                                <div class="post-card glass-effect" data-post-id="{{ post.id }}">
+                                                    <div class="post-image">
+                                                        <img src="{{ post.image.url }}" alt="{{ post.description|truncatechars:100 }}">
+                                                    </div>
+                                                    <div class="post-content">
+                                                        <h4>
+                                                            {% if post.destination %}
+                                                                {{ post.destination.recommendation }}
+                                                            {% else %}
+                                                                {{ post.pending_destination.name }}
+                                                            {% endif %}
+                                                        </h4>
+                                                        <p>{{ post.description|truncatechars:100 }}</p>
+                                                        <p>Автор: {{ post.user.username }} | Дата: {{ post.created_at|date:"d.m.Y" }}</p>
+                                                        <p class="likes-count">Лайков: {{ post.likes.count }}</p>
+                                                        <form method="post" action="{% url 'toggle_like_post' post.id %}" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                                            <button type="submit" class="delete-icon" title="Убрать лайк">❤️</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>Вы еще не лайкали посты.</p>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            </div>
+                        <div role="tabpanel" class="tab-pane" id="my-routes">
+                                <article class="blog-post">
+                                    <div class="post-content">
+                                        <h3 class="post-title">Мои маршруты:</h3>
+                                        {% if user.userprofile.routes.all %}
+                                            {% for route in user.userprofile.routes.all %}
+                                                <div class="route-card glass-effect">
+                                                    <div class="route-content">
+                                                        <h4>{{ route.title }}</h4>
+                                                        <p>{{ route.description|truncatechars:100 }}</p>
+                                                        <p>Дата создания: {{ route.created_at|date:"d.m.Y" }}</p>
+                                                    </div>
+                                                    <a href="{% url 'edit_route' route.id %}" class="edit-icon" title="Редактировать">✏️</a>
+                                                    <form method="post" action="{% url 'delete_route' route.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="delete-icon" title="Удалить">🗑</button>
+                                                    </form>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>Вы еще не создавали маршрутов.</p>
+                                        {% endif %}
+                                    <a href="{% url 'create_route' %}" class="btn btn-primary mb-3">Создать маршрут</a>
+                                    </div>
+                                </article>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+{% include 'travel_app/modal_post.html' %}
+    {% block extra_scripts %}
+<link rel="stylesheet" href="{% static 'js/profile.js' %}">
+{% endblock %}
 {% endblock %}

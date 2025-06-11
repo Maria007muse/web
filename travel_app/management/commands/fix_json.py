@@ -13,5 +13,5 @@ with open('data.json', 'rb') as f:
 data = json.loads(text)
 
 # Сохраняем в UTF-8
-with open('data_fixed.json', 'w', encoding='utf-8') as f:
+with open('../../../data_fixed.json', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False)

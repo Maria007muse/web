@@ -1,0 +1,49 @@
+{% extends 'travel_app/base.html' %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'travel_app/route.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="hero overlay route-hero">
+    <div class="hero-content">
+        <h1>{{ route.title }}</h1>
+        <p>{{ route.description|truncatechars:100 }}</p>
+    </div>
+</div>
+<main class="site-main">
+    <section class="section-route-detail">
+        <div class="container">
+            <div class="glass-effect">
+                <h3>Точки маршрута</h3>
+                <ul class="points-list">
+                    <!-- route_detail.html, внутри <ul class="points-list"> -->
+{% for point in points %}
+    <li class="point-card glass-effect mb-3">
+        <div class="point-content">
+            <h4>{{ point.custom_name|default_if_none:point.destination.recommendation|default:'Без названия' }}</h4>
+            {% if point.note %}
+                <p>{{ point.note|truncatechars:100 }}</p>
+            {% endif %}
+            {% if point.date_time %}
+                <p>Дата и время: {{ point.date_time|date:"d.m.Y H:i" }}</p>
+            {% endif %}
+        </div>
+    </li>
+{% empty %}
+    <p>Добавьте точки к маршруту.</p>
+{% endfor %}
+                </ul>
+                {% if route.user == user %}
+                    <a href="{% url 'edit_route' route.id %}" class="btn btn-primary">Редактировать</a>
+                    <form method="post" action="{% url 'delete_route' route.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

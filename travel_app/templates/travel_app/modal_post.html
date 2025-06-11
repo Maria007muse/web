@@ -1,0 +1,203 @@
+{% load static %}
+<!-- Кастомное модальное окно для постов -->
+<style>
+    .custom-post-modal {
+        font-family: 'Montserrat', sans-serif;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 100vh; /* Гарантируем полную высоту экрана */
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 2000;
+        align-items: center; /* Вертикальное центрирование */
+        justify-content: center; /* Горизонтальное центрирование */
+        overflow-y: auto;
+    }
+    .custom-post-modal.show {
+        display: flex;
+    }
+    .custom-post-modal__content {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 1000px;
+        height: 600px;
+        display: flex;
+        overflow: hidden;
+        margin: auto;
+    }
+    .custom-post-modal__image {
+        flex: 6; /* 60% ширины */
+        background-size: cover;
+        background-position: center;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+    .custom-post-modal__details {
+        flex: 4; /* 40% ширины */
+        padding: 20px;
+        overflow-y: auto;
+    }
+    .custom-post-modal__details h2 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .custom-post-modal__details p {
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    .custom-post-modal__details small {
+        color: #999;
+        font-size: 13px;
+        display: block;
+        margin-bottom: 10px;
+    }
+    .custom-post-modal__tags span,
+    .custom-post-modal__vibes span {
+        background: #ff8e53;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+        font-size: 13px;
+    }
+    .custom-post-modal__close {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 24px;
+        color: #ff6b6b;
+        cursor: pointer;
+        transition: color 0.3s;
+        z-index: 2001;
+    }
+    .custom-post-modal__close:hover {
+        color: #ff8e53;
+    }
+    .custom-post-modal__spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+    .custom-post-modal__spinner div {
+        width: 3rem;
+        height: 3rem;
+        border: 0.25em solid #ff6b6b;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: 0.75s linear infinite spinner-border;
+    }
+    @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+    }
+    .custom-post-modal__pending-message {
+        color: #ff6b6b;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    .custom-post-modal__destination-link {
+        color: #ff6b6b;
+        text-decoration: none;
+        font-size: 14px;
+        display: block;
+        margin-top: 10px;
+    }
+    .custom-post-modal__destination-link:hover {
+        color: #ff8e53;
+    }
+</style>
+
+<div class="custom-post-modal" id="customPostModal">
+    <div class="custom-post-modal__content">
+        <span class="custom-post-modal__close">←</span>
+        <div class="custom-post-modal__image" id="custom-modal-image"></div>
+        <div class="custom-post-modal__details">
+            <h2 id="custom-modal-name"></h2>
+            <p id="custom-modal-description"></p>
+            <div class="custom-post-modal__tags" id="custom-modal-tags"></div>
+            <div class="custom-post-modal__vibes" id="custom-modal-vibes"></div>
+            <small id="custom-modal-author"></small>
+            <p id="custom-modal-likes" class="likes-count"></p>
+            {% if user.is_authenticated %}
+                <a id="custom-modal-destination-link" href="#" class="custom-post-modal__destination-link" style="display: none;">Подробнее о месте</a>
+                <p id="custom-modal-pending-message" class="custom-post-modal__pending-message" style="display: none;">Место ожидает модерации</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.post-card').on('click', function(e) {
+            if ($(e.target).closest('.btn-save-post').length || $(e.target).closest('.btn-like-post').length || $(e.target).closest('.delete-icon').length) {
+                return;
+            }
+            const postId = $(this).data('post-id');
+            $.ajax({
+                url: '{% url "inspiration_feed" %}',
+                type: 'POST',
+                data: {
+                    post_id: postId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                beforeSend: function() {
+                    $('#customPostModal .custom-post-modal__content').html(`
+                        <div class="custom-post-modal__spinner">
+                            <div></div>
+                        </div>
+                    `);
+                    $('#customPostModal').addClass('show');
+                },
+                success: function(data) {
+                    if (data.error) {
+                        console.error('Server error:', data.error);
+                        alert('Ошибка: ' + data.error);
+                        $('#customPostModal').removeClass('show');
+                        return;
+                    }
+                    const modalContent = `
+                        <span class="custom-post-modal__close">←</span>
+                        <div class="custom-post-modal__image" id="custom-modal-image" style="background-image: url('${data.image_url || '/static/placeholder.jpg'}')"></div>
+                        <div class="custom-post-modal__details">
+                            <h2 id="custom-modal-name">${data.name || 'Без названия'}</h2>
+                            <p id="custom-modal-description">${data.description || 'Нет описания'}</p>
+                            <div class="custom-post-modal__tags" id="custom-modal-tags">
+                                ${data.tags && data.tags.length ? data.tags.map(tag => `<span>${tag}</span>`).join('') : ''}
+                            </div>
+                            <div class="custom-post-modal__vibes" id="custom-modal-vibes">
+                                ${data.vibe && data.vibe.length ? data.vibe.map(vibe => `<span>${vibe}</span>`).join('') : ''}
+                            </div>
+                            <small id="custom-modal-author">Опубликовано: ${data.created_at || 'N/A'} | ${data.author || 'Аноним'}</small>
+                            <p id="custom-modal-likes" class="likes-count">Лайков: ${data.likes_count || 0}</p>
+                            ${data.destination_id ? 
+                                `<a id="custom-modal-destination-link" href="/destination/${data.destination_id}/" class="custom-post-modal__destination-link">Подробнее о месте</a>` : 
+                                '<p id="custom-modal-pending-message" class="custom-post-modal__pending-message">Место ожидает модерации</p>'
+                            }
+                        </div>
+                    `;
+                    $('#customPostModal .custom-post-modal__content').html(modalContent);
+                    $('#customPostModal').addClass('show');
+                    $('.custom-post-modal__close').on('click', function() {
+                        $('#customPostModal').removeClass('show');
+                    });
+                },
+                error: function(xhr) {
+                    console.error('AJAX error:', xhr.responseText);
+                    alert('Не удалось загрузить данные поста.');
+                    $('#customPostModal').removeClass('show');
+                }
+            });
+        });
+    });
+</script>

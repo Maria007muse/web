@@ -1,0 +1,154 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f1eb;
+    margin: 0;
+    padding: 0;
+}
+
+.hero {
+    background: linear-gradient(135deg, #d47a8f 0%, #6b7280 100%);
+    color: #fff;
+    text-align: center;
+    padding: 60px 20px;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero h1 {
+    font-weight: 600;
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #d47a8f;
+    background: rgba(255, 255, 255, 0.8);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #5b5b5b;
+}
+
+#route-form .bootstrap-select > select.bs-select-hidden,
+#route-form select.bs-select-hidden,
+#route-form select.selectpicker {
+    display: block !important;
+}
+
+#route-form .bootstrap-select .form-control {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.btn-primary {
+    background-color: #d47a8f;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background-color: #c56a7f;
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.btn-secondary:hover {
+    background-color: #5b5b5b;
+}
+
+.btn-danger {
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.btn-danger:hover {
+    background-color: #ff8e53;
+}
+
+.points-container {
+    margin-bottom: 20px;
+}
+
+.point-block {
+    margin-bottom: 20px;
+    position: relative;
+    cursor: move;
+}
+
+.point-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.point-header span {
+    font-weight: 500;
+    color: #5b5b5b;
+}
+
+.points-list {
+    list-style: none;
+    padding: 0;
+}
+
+.point-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.point-content {
+    flex-grow: 1;
+}
+
+.point-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.point-content p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+}
